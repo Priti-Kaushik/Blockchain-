@@ -1,3 +1,11 @@
 # Blockchain-
+Use another free API to download data for the top 20 L1/L2s by market capitalization and compute the following:
+•
+Aggregate market capitalization to DEX volume (ratio) history using a 7d average going back at least 24 months (marketcap_dex_analysis.py)
+•
+Time-adjusted (start all data sources at t_0 regardless of start date) comparison of Aptos to the top 20 L1/L2 by TVL, DEX volume, stablecoin TVL (aptos_comparison.py)
+•
+Compute 15 day correlation between the top 20 for the past 24 months and list the tokens that have had the lowest correlations vs ETH, the duration of the low correlation, the dates of the low correlation, relative volatility of the target vs ETH during the period and relative volatility of ETH vs the prior 24 months (correlation_analysis.py)
 
-The aggregate market capitalization to DEX (decentralized exchange) volume (ratio) refers to the ratio between the total value of all cryptocurrencies (market capitalization) and the trading volume happening on decentralized exchanges (DEXs). When this ratio is expressed as a 7-day moving average, it smooths out daily fluctuations by averaging the data over a week to provide a clearer long-term trend. Analyzing this over 24 months helps reveal how the relationship between market capitalization and trading volume has evolved.
+
+
