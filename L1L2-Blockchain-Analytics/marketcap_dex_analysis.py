@@ -134,6 +134,8 @@ for chain in chains:
     df.set_index('date', inplace=True)
     df.sort_index(inplace=True)
     df['ratio_7d_ma'] = df['ratio'].rolling(window=7).mean()
+      # Optionally, save the DataFrame to a CSV for further analysis
+    df.to_csv(f"{chain['name']}_marketcap_dexvolume_ratio.csv")
 
     # Plot the 7-day moving average ratio
     plt.figure(figsize=(12, 6))
@@ -145,8 +147,7 @@ for chain in chains:
     plt.tight_layout()
     plt.show()
 
-    # Optionally, save the DataFrame to a CSV for further analysis
-    df.to_csv(f"{chain['name']}_marketcap_dexvolume_ratio.csv")
+  
 
 
 
