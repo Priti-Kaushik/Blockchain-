@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from datetime import datetime, timedelta
-
+import requests
 # Mapping from CoinGecko 'coin_id' to Yahoo Finance tickers
 COINGECKO_TO_YAHOO_TICKER = {
     'ethereum': 'ETH-USD',
@@ -35,29 +35,45 @@ def get_top_coins(limit=20):
     Returns a list of top coins with their CoinGecko 'coin_id's.
     """
     # Predefined list of top coins excluding Ethereum
-    top_coins = [
-        {'id': 'bitcoin', 'symbol': 'btc', 'name': 'Bitcoin'},
-        {'id': 'tether', 'symbol': 'usdt', 'name': 'Tether'},
-        {'id': 'binancecoin', 'symbol': 'bnb', 'name': 'Binance Coin'},
-        {'id': 'solana', 'symbol': 'sol', 'name': 'Solana'},
-        {'id': 'ripple', 'symbol': 'xrp', 'name': 'XRP'},
-        {'id': 'usd-coin', 'symbol': 'usdc', 'name': 'USD Coin'},
-        {'id': 'dogecoin', 'symbol': 'doge', 'name': 'Dogecoin'},
-        {'id': 'cardano', 'symbol': 'ada', 'name': 'Cardano'},
-        {'id': 'tron', 'symbol': 'trx', 'name': 'TRON'},
-        {'id': 'avalanche-2', 'symbol': 'avax', 'name': 'Avalanche'},
-        {'id': 'shiba-inu', 'symbol': 'shib', 'name': 'Shiba Inu'},
-        {'id': 'wrapped-bitcoin', 'symbol': 'wbtc', 'name': 'Wrapped Bitcoin'},
-        {'id': 'chainlink', 'symbol': 'link', 'name': 'Chainlink'},
-        {'id': 'weth', 'symbol': 'weth', 'name': 'Wrapped Ether'},
-        {'id': 'bitcoin-cash', 'symbol': 'bch', 'name': 'Bitcoin Cash'},
-        {'id': 'polkadot', 'symbol': 'dot', 'name': 'Polkadot'},
-        {'id': 'near', 'symbol': 'near', 'name': 'NEAR Protocol'},
-        {'id': 'the-open-network', 'symbol': 'ton', 'name': 'The Open Network'},
-        {'id': 'staked-ether', 'symbol': 'steth', 'name': 'Staked Ether'},
-        {'id': 'wrapped-steth', 'symbol': 'wsteth', 'name': 'Wrapped Staked Ether'}
-    ]
+    # top_coins = [
+    #     {'id': 'bitcoin', 'symbol': 'btc', 'name': 'Bitcoin'},
+    #     {'id': 'tether', 'symbol': 'usdt', 'name': 'Tether'},
+    #     {'id': 'binancecoin', 'symbol': 'bnb', 'name': 'Binance Coin'},
+    #     {'id': 'solana', 'symbol': 'sol', 'name': 'Solana'},
+    #     {'id': 'ripple', 'symbol': 'xrp', 'name': 'XRP'},
+    #     {'id': 'usd-coin', 'symbol': 'usdc', 'name': 'USD Coin'},
+    #     {'id': 'dogecoin', 'symbol': 'doge', 'name': 'Dogecoin'},
+    #     {'id': 'cardano', 'symbol': 'ada', 'name': 'Cardano'},
+    #     {'id': 'tron', 'symbol': 'trx', 'name': 'TRON'},
+    #     {'id': 'avalanche-2', 'symbol': 'avax', 'name': 'Avalanche'},
+    #     {'id': 'shiba-inu', 'symbol': 'shib', 'name': 'Shiba Inu'},
+    #     {'id': 'wrapped-bitcoin', 'symbol': 'wbtc', 'name': 'Wrapped Bitcoin'},
+    #     {'id': 'chainlink', 'symbol': 'link', 'name': 'Chainlink'},
+    #     {'id': 'weth', 'symbol': 'weth', 'name': 'Wrapped Ether'},
+    #     {'id': 'bitcoin-cash', 'symbol': 'bch', 'name': 'Bitcoin Cash'},
+    #     {'id': 'polkadot', 'symbol': 'dot', 'name': 'Polkadot'},
+    #     {'id': 'near', 'symbol': 'near', 'name': 'NEAR Protocol'},
+    #     {'id': 'the-open-network', 'symbol': 'ton', 'name': 'The Open Network'},
+    #     {'id': 'staked-ether', 'symbol': 'steth', 'name': 'Staked Ether'},
+    #     {'id': 'wrapped-steth', 'symbol': 'wsteth', 'name': 'Wrapped Staked Ether'}
+    # ]
+
+    # 8296611190
     
+    # import requests
+
+    url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+
+    headers = {
+    "accept": "application/json",
+    "x-cg-api-key": "CG-uqaTnBMHamtYSJeAEsoEEFsY\t"
+}
+
+    response = requests.get(url, headers=headers).json()
+
+    # print(response.text)
+    top_coins = [{'id': coin['id'], 'symbol': coin['symbol'], 'name': coin['name']} for coin in response]
+
     # Limit to the top 'limit' coins
     return top_coins[:limit]
 
@@ -250,7 +266,7 @@ if __name__ == "__main__":
     
     # Step 4: Align Dates
     returns_df = pd.DataFrame(coin_returns)
-    returns_df = returns_df.join(eth_returns.rename('ethereum'), how='inner')
+    returns_df = returns_df.merge(eth_returns, left_index=True, right_index=True, how='inner', suffixes=('_left', '_right'))
     returns_df.dropna(inplace=True)
     
     if returns_df.empty:
@@ -340,3 +356,6 @@ if __name__ == "__main__":
         plt.legend()
         plt.tight_layout()
         plt.show()
+
+# if __name__ == '__main__':
+#     print(get_top_coins())
