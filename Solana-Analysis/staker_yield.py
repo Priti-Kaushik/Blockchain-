@@ -2,7 +2,7 @@
 import requests
 import pandas as pd
 from solana.rpc.api import Client
-from solana.publickey import PublicKey
+from solders.pubkey import Pubkey
 
 # Initialize Solana client
 client = Client("https://api.mainnet-beta.solana.com")
@@ -51,9 +51,9 @@ def get_staker_info(stake_account_address, apr=0.05, epochs=10):
     """
     try:
         # Validate the public key format
-        stake_pubkey = PublicKey(stake_account_address)
+        stake_pubkey = Pubkey.from_string(stake_account_address)
         
-        # Fetch account info using the PublicKey object
+        # Fetch account info using the Pubkey object
         response = client.get_account_info(stake_pubkey, encoding="base64")
         
         # Check if the account exists
