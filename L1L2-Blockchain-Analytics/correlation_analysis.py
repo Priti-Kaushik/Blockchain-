@@ -37,7 +37,7 @@ def get_top_coins(limit=20):
       
     # import requests
 
-    url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+    url = "https://api.coingecko.com/api/v3/coins/markets?per_page=20"
 
     headers = {
     "accept": "application/json",
